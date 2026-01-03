@@ -3,6 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Reservation
 from .serializers import ReservationSerializer
 
+
 class ReservationListCreateView(generics.ListCreateAPIView):
     serializer_class = ReservationSerializer
     permission_classes = [IsAuthenticated]
@@ -12,3 +13,11 @@ class ReservationListCreateView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+
+class ReservationCancelView(generics.DestroyAPIView):
+    serializer_class = ReservationSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Reservation.objects.filter(user=self.request.user)
